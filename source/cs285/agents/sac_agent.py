@@ -14,9 +14,9 @@ class SACAgent(BaseAgent):
         super(SACAgent, self).__init__()
 
         self.env = env
+        print(self.env.action_space)
         self.action_range = [
-            float(self.env.action_space.low.min()),
-            float(self.env.action_space.high.max())
+            -1, 1
         ]
         self.agent_params = agent_params
         self.gamma = self.agent_params['gamma']

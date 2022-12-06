@@ -75,6 +75,24 @@ def get_env_kwargs(env_name):
         }
         kwargs['exploration_schedule'] = lander_exploration_schedule(kwargs['num_timesteps'])
 
+    elif env_name == 'QAEnv':
+        def empty_wrapper(env):
+            return env
+        kwargs = {
+            'optimizer_spec': lander_optimizer(),
+            'q_func': create_lander_q_network,
+            'replay_buffer_size': 5000,
+            'batch_size': 32,
+            'gamma': 1.00,
+            'learning_starts': 1000,
+            'learning_freq': 1,
+            'frame_history_len': 1,
+            'target_update_freq': 3000,
+            'grad_norm_clipping': 10,
+            'num_timesteps': 100000,
+            'env_wrappers': empty_wrapper
+        }
+        kwargs['exploration_schedule'] = lander_exploration_schedule(kwargs['num_timesteps'])
     else:
         raise NotImplementedError
 

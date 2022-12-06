@@ -6,6 +6,7 @@ from cs285.infrastructure import pytorch_util as ptu
 from torch import nn
 from torch import optim
 import itertools
+from torch import distributions
 
 class MLPPolicySAC(MLPPolicy):
     def __init__(self,
@@ -50,6 +51,10 @@ class MLPPolicySAC(MLPPolicy):
         return ptu.to_numpy(action)
 
     def forward(self, observation: torch.FloatTensor):
+        if self.discrete:
+            logits = self.logits_na(observation)
+            action_distribution = distributions.Categorical(logits=logits)
+            return action_distribution
         mean = self.mean_net(observation)
         log_std = torch.tanh(self.logstd)
         log_std_min, log_std_max = self.log_std_bounds

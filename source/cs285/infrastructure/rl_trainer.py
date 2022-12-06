@@ -26,6 +26,10 @@ from cs285.infrastructure.dqn_utils import (
 #register all of our envs
 import cs285.envs
 
+from nlp_gym.data_pools.custom_question_answering_pools import QASC
+from nlp_gym.envs.question_answering.env import QAEnv
+from nlp_gym.envs.question_answering.featurizer import InformedFeaturizer
+
 # how many rollouts to save as videos to tensorboard
 MAX_NVIDEO = 2
 MAX_VIDEO_LEN = 40 # we overwrite this in the code below
@@ -60,7 +64,19 @@ class RL_Trainer(object):
         # Make the gym environment
         register_custom_envs()
         if self.params['agent_class'] is SACAgent:
-            self.env = gym.make(self.params['env_name'], max_episode_steps=self.params['ep_len'])
+            if self.params['env_name'] == 'QAEnv':
+                data_pool = QASC.prepare(split="train")
+                featurizer = InformedFeaturizer()
+                self.env = QAEnv(observation_featurizer=featurizer)
+                for sample, weight in data_pool:
+                    self.env.add_sample(sample, weight)
+            else: self.env = gym.make(self.params['env_name'], max_episode_steps=self.params['ep_len'])
+        elif self.params['env_name'] == 'QAEnv':
+            data_pool = QASC.prepare(split="train")
+            featurizer = InformedFeaturizer()
+            self.env = QAEnv(observation_featurizer=featurizer)
+            for sample, weight in data_pool:
+                self.env.add_sample(sample, weight)
         else:
             self.env = gym.make(self.params['env_name'])
         if self.params['video_log_freq'] > 0:
@@ -110,10 +126,10 @@ class RL_Trainer(object):
             self.fps = 1/self.env.model.opt.timestep
         elif 'env_wrappers' in self.params:
             self.fps = 30 # This is not actually used when using the Monitor wrapper
-        elif 'video.frames_per_second' in self.env.env.metadata.keys():
-            self.fps = self.env.env.metadata['video.frames_per_second']
+        # elif 'video.frames_per_second' in self.env.env.metadata.keys():
+        #     self.fps = self.env.env.metadata['video.frames_per_second']
         else:
-            self.fps = 10
+            self.fps = 1
 
 
         #############
