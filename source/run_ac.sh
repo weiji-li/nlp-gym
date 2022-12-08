@@ -1,16 +1,16 @@
 ## cartpole
 
 python cs285/scripts/run_hw3_actor_critic.py --env_name QAEnv \
-	-n 100 -b 1000 --exp_name ac1_1 -ntu 1 -ngsptu 1 --scalar_log_freq 1
+	-n 200 -b 1000 --exp_name ac1_1_n200 -ntu 1 -ngsptu 1 --scalar_log_freq 1
 
 python cs285/scripts/run_hw3_actor_critic.py --env_name QAEnv \
-	-n 100 -b 1000 --exp_name ac1_100 -ntu 1 -ngsptu 100 --scalar_log_freq 1
+	-n 200 -b 1000 --exp_name ac1_100_n200 -ntu 1 -ngsptu 100 --scalar_log_freq 1
 
 python cs285/scripts/run_hw3_actor_critic.py --env_name QAEnv \
-	-n 100 -b 1000 --exp_name ac100_1 -ntu 100 -ngsptu 1 --scalar_log_freq 1
+	-n 200 -b 1000 --exp_name ac100_1_n200 -ntu 100 -ngsptu 1 --scalar_log_freq 1
 
 python cs285/scripts/run_hw3_actor_critic.py --env_name QAEnv \
-	-n 100 -b 1000 --exp_name ac10_10 -ntu 10 -ngsptu 10 --scalar_log_freq 1
+	-n 200 -b 1000 --exp_name ac10_10_n200 -ntu 10 -ngsptu 10 --scalar_log_freq 1
 
 ## inverted-pendulum
 
