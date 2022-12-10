@@ -26,7 +26,7 @@ from cs285.infrastructure.dqn_utils import (
 #register all of our envs
 import cs285.envs
 
-from nlp_gym.data_pools.custom_question_answering_pools import QASC
+from nlp_gym.data_pools.custom_question_answering_pools import QASC, AIRC
 from nlp_gym.envs.question_answering.env import QAEnv
 from nlp_gym.envs.question_answering.featurizer import InformedFeaturizer, SimpleFeaturizer
 
@@ -74,10 +74,28 @@ class RL_Trainer(object):
         elif self.params['env_name'] == 'QAEnv':
             data_pool = QASC.prepare(split="train")
             # featurizer = InformedFeaturizer()
-            featurizer = SimpleFeaturizer()
+            featurizer = InformedFeaturizer()
             self.env = QAEnv(observation_featurizer=featurizer)
             for sample, weight in data_pool:
                 self.env.add_sample(sample, weight)
+            
+            val_pool = QASC.prepare(split='val')
+            self.val_env = QAEnv(observation_featurizer=featurizer)
+            for sample, weight in val_pool:
+                self.val_env.add_sample(sample, weight)
+
+        elif self.params['env_name'] == 'QAEnvAIRC':
+            data_pool = AIRC.prepare(split="train", dataset_id='ARC-Easy-IR')
+            # featurizer = InformedFeaturizer()
+            featurizer = InformedFeaturizer()
+            self.env = QAEnv(observation_featurizer=featurizer)
+            for sample, weight in data_pool:
+                self.env.add_sample(sample, weight)
+            
+            val_pool = AIRC.prepare(split="val", dataset_id='ARC-Easy-IR')
+            self.val_env = QAEnv(observation_featurizer=featurizer)
+            for sample, weight in val_pool:
+                self.val_env.add_sample(sample, weight)
         else:
             self.env = gym.make(self.params['env_name'])
         if self.params['video_log_freq'] > 0:
@@ -401,7 +419,8 @@ class RL_Trainer(object):
 
         # collect eval trajectories, for logging
         print("\nCollecting data for eval...")
-        eval_paths, eval_envsteps_this_batch = utils.sample_trajectories(self.env, eval_policy, self.params['eval_batch_size'], self.params['ep_len'])
+        
+        eval_paths, eval_envsteps_this_batch = utils.sample_trajectories(self.val_env, eval_policy, self.params['eval_batch_size'], self.params['ep_len'])
 
         # save eval rollouts as videos in tensorboard event file
         if self.logvideo and train_video_paths != None:

@@ -45,6 +45,11 @@ python cs285/scripts/run_hw3_actor_critic.py \
 	--discount 0.99 -n 200 -l 2 -s 128 -b 5000 -lr 0.01 \
     --exp_name ac_10_10hp2.3_simple -ntu 10 -ngsptu 10 --scalar_log_freq 1
 
+python cs285/scripts/run_hw3_actor_critic.py \
+	--env_name QAEnvAIRC \
+	--discount 0.99 -n 200 -l 2 -s 128 -b 5000 -lr 0.01 \
+    --exp_name ac_10_10hp2.3_AIRC -ntu 10 -ngsptu 10 --scalar_log_freq 1
+
 ## half cheetah
 
 #  python cs285/scripts/run_hw3_actor_critic.py \
