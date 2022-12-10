@@ -28,7 +28,7 @@ import cs285.envs
 
 from nlp_gym.data_pools.custom_question_answering_pools import QASC
 from nlp_gym.envs.question_answering.env import QAEnv
-from nlp_gym.envs.question_answering.featurizer import InformedFeaturizer
+from nlp_gym.envs.question_answering.featurizer import InformedFeaturizer, SimpleFeaturizer
 
 # how many rollouts to save as videos to tensorboard
 MAX_NVIDEO = 2
@@ -73,7 +73,8 @@ class RL_Trainer(object):
             else: self.env = gym.make(self.params['env_name'], max_episode_steps=self.params['ep_len'])
         elif self.params['env_name'] == 'QAEnv':
             data_pool = QASC.prepare(split="train")
-            featurizer = InformedFeaturizer()
+            # featurizer = InformedFeaturizer()
+            featurizer = SimpleFeaturizer()
             self.env = QAEnv(observation_featurizer=featurizer)
             for sample, weight in data_pool:
                 self.env.add_sample(sample, weight)
